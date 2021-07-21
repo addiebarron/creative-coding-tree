@@ -17,13 +17,12 @@ function setup() {
       redraw();
     });
 
-	slider = createSlider(1, 8, 5, 1);
+	slider = createSlider(1, 8, 6, 1);
 	slider.id('depthslider');
 	slider.input(redraw);
-
   
     // Tree parameters
-    angleVariance = PI/8;
+    angleVariance = HALF_PI/3;
     lengthVariance = 10;
 	lengthMultiplier = 20;
 }
@@ -48,15 +47,12 @@ function drawTree(n, startPoint, angle) {
     let color = colors[n%colors.length]
     stroke(color)
     strokeCap(SQUARE)
-	//strokeWeight(n*(n-5)+1)
-  
-    const nSubtrees = getRandomInt(1,n);
-  
+	//strokeWeight(n*(n-2)+1)
+
     let length = n*lengthMultiplier + (2*Math.random() - 1)*lengthVariance;
   
     // draw trunk
     
-    // generated from angle and length
     let relativeNewX = length * cos(angle);
     let relativeNewY = length * sin(angle);
   
@@ -67,8 +63,9 @@ function drawTree(n, startPoint, angle) {
   
 	line(...startPoint, ...endPoint);
 
-	// draw branches (sub-trunks)
-  
+	// draw branches
+	const nSubtrees = getRandomInt(1, floor(n**2/3));
+
 	if (n != 0) {
 		for (let i=0; i < nSubtrees; i++) {
             const newAngle = angle + (2*Math.random() - 1)*angleVariance;
