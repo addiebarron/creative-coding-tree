@@ -9,28 +9,38 @@ let canvas,
 let colors = ['#264653','#2a9d8f','#e9c46a','#f4a261','#e76f51'];
 
 function setup() {
-	canvasSize = {
-		width: 500,
-		height: 500,
-	};
-	canvas = createCanvas(canvasSize.width, canvasSize.height);
+	canvas = createCanvas(windowWidth, windowHeight);
   
-    button = createButton('New Tree');    
+    button = createButton('New Tree');
+	button.id('newtreebtn')   
     button.mousePressed(() => {
       redraw();
-    });	
+    });
+
+	slider = createSlider(1, 8, 5, 1);
+	slider.id('depthslider');
+	slider.input(redraw);
+
   
     // Tree parameters
     angleVariance = PI/8;
     lengthVariance = 10;
-	start = [canvasSize.width/2, canvasSize.height];
+	lengthMultiplier = 20;
 }
 
 function draw() {
 	noLoop();
 
+	let depth = slider.value();
+
 	background(0);
-    drawTree(7, start, HALF_PI*3);
+	start = [width/2, height];
+    drawTree(depth, start, HALF_PI*3);
+}
+
+function windowResized() {
+	resizeCanvas(windowWidth, windowHeight);
+	redraw();
 }
 
 function drawTree(n, startPoint, angle) {
@@ -42,7 +52,7 @@ function drawTree(n, startPoint, angle) {
   
     const nSubtrees = getRandomInt(1,n);
   
-    let length = n*15 + (2*Math.random() - 1)*lengthVariance;
+    let length = n*lengthMultiplier + (2*Math.random() - 1)*lengthVariance;
   
     // draw trunk
     
